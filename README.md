@@ -1,9 +1,5 @@
 <p align="center">
-  <h1 align="center">Slopless</h1>
-  <p align="center">
-    Production-tested Claude Code configuration that kills AI slop.<br>
-    Better code. Human-sounding text. Zero fluff.
-  </p>
+  <img src="banner.png" alt="Slopless" width="100%">
 </p>
 
 <p align="center">
