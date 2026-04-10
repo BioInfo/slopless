@@ -1,0 +1,90 @@
+{
+  "cleanupPeriodDays": 36500,
+  "env": {
+    "CLAUDE_CODE_MAX_OUTPUT_TOKENS": "128000",
+    "DISABLE_COST_WARNINGS": "1",
+    "USE_BUILTIN_RIPGREP": "1",
+    "CLAUDE_BASH_MAINTAIN_PROJECT_WORKING_DIR": "1",
+    "ENABLE_TOOL_SEARCH": "auto:5",
+    "CLAUDE_CODE_SUBAGENT_MODEL": "claude-haiku-4-5-20251001",
+    "CLAUDE_CODE_AUTOCOMPACT_PCT_OVERRIDE": "50"
+  },
+  "includeGitInstructions": false,
+  "permissions": {
+    "allow": [
+      "Bash(*)",
+      "Read(*)",
+      "Write(*)",
+      "Edit(*)",
+      "MultiEdit(*)",
+      "Glob(*)",
+      "Grep(*)",
+      "WebFetch(*)",
+      "WebSearch(*)",
+      "Agent(*)",
+      "mcp__*"
+    ],
+    "defaultMode": "acceptEdits"
+  },
+  "hooks": {
+    "PreCompact": [
+      {
+        "matcher": "auto|manual",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo '{\"systemMessage\": \"CONTEXT COMPACTION STARTING. Key session state will be preserved in PostCompact.\"}'"
+          }
+        ]
+      }
+    ],
+    "PostCompact": [
+      {
+        "matcher": "auto|manual",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "CONTINUITY=\"\"; [ -f .claude/CONTINUITY.md ] && CONTINUITY=$(head -50 .claude/CONTINUITY.md); CLAUDE_MD=\"\"; [ -f CLAUDE.md ] && CLAUDE_MD=$(head -30 CLAUDE.md); echo \"{\\\"systemMessage\\\": \\\"POST-COMPACTION CONTEXT REINJECT: ${CONTINUITY:+Project state from CONTINUITY.md loaded. }${CLAUDE_MD:+Project CLAUDE.md loaded. }Remember: no em dashes, no trailing summaries, verify claims before presenting, evidence-first.\\\"}\"",
+            "timeout": 5
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Edit|MultiEdit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "F=\"$CLAUDE_TOOL_FILE_PATH\"; case \"$F\" in *.js|*.ts|*.jsx|*.tsx) npx eslint \"$F\" --fix 2>/dev/null || true; npx prettier --write \"$F\" 2>/dev/null || true;; *.json|*.css|*.html) npx prettier --write \"$F\" 2>/dev/null || true;; *.py) ruff check --fix \"$F\" 2>/dev/null || true; ruff format \"$F\" 2>/dev/null || true;; *.go) gofmt -w \"$F\" 2>/dev/null || true;; *.rs) rustfmt \"$F\" 2>/dev/null || true;; esac",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo '{\"systemMessage\": \"Current time: '$(date '+%A, %B %d, %Y %I:%M %p %Z')'\"}'"
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "WebSearch",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 -c \"import json, sys, re; from datetime import datetime; input_data = json.load(sys.stdin); tool_input = input_data.get('tool_input', {}); query = tool_input.get('query', ''); current_year = str(datetime.now().year); has_year = re.search(r'\\\\b20\\\\d{2}\\\\b', query); has_temporal = any(word in query.lower() for word in ['latest', 'recent', 'current', 'new', 'now', 'today']); should_add_year = not has_year and not has_temporal; modified_query = f'{query} {current_year}' if should_add_year else query; output = {'hookSpecificOutput': {'hookEventName': 'PreToolUse', 'modifiedToolInput': {'query': modified_query}}}; print(json.dumps(output)); sys.exit(0)\""
+          }
+        ]
+      }
+    ]
+  },
+  "showTurnDuration": true,
+  "terminalProgressBarEnabled": true
+}
