@@ -59,9 +59,13 @@ SEP=" ${GRY}│${R} "
 # =============================================================================
 fmt_model() {
     case "$MODEL_ID" in
+        *opus-5*)                   echo -n "${BMAG}◆ Opus5${R}" ;;
+        *opus-4-8*|*opus-4.8*)     echo -n "${BMAG}◆ Opus4.8${R}" ;;
         *opus-4-6*|*opus-4.6*)     echo -n "${BMAG}◆ Opus4.6${R}" ;;
         *opus-4-5*|*opus-4.5*)     echo -n "${BMAG}◆ Opus4.5${R}" ;;
         *opus*)                     echo -n "${BMAG}◆ Opus${R}" ;;
+        *fable-5*)                  echo -n "${BMAG}◈ Fable5${R}" ;;
+        *sonnet-5*)                 echo -n "${BBLU}◇ Son5${R}" ;;
         *sonnet-4-5*|*sonnet-4.5*) echo -n "${BBLU}◇ Son4.5${R}" ;;
         *sonnet*)                   echo -n "${BBLU}◇ Sonnet${R}" ;;
         *haiku-4-5*|*haiku-4.5*)   echo -n "${BGRN}○ Haiku4.5${R}" ;;

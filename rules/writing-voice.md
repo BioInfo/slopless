@@ -110,7 +110,7 @@ These rules exist to make output indistinguishable from human writing. LLM text 
 
 ### Specificity Over Generality
 
-- **Ground every assertion in something concrete.** A person's name, a specific failure mode, an exact metric, a dated event, a named system. "Leadership is evolving" is slop. "Jorge restructured the reporting line in March" is concrete.
+- **Ground every assertion in something concrete.** A person's name, a specific failure mode, an exact metric, a dated event, a named system. "Performance improved" is slop. "p99 latency dropped from 840ms to 210ms after the index change" is concrete.
 - **Vary how you introduce evidence.** Never use "research shows" or "studies indicate" twice in the same piece.
 
 ### Lexical Authenticity
