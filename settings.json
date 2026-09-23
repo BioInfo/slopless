@@ -6,7 +6,7 @@
     "USE_BUILTIN_RIPGREP": "1",
     "CLAUDE_BASH_MAINTAIN_PROJECT_WORKING_DIR": "1",
     "ENABLE_TOOL_SEARCH": "auto:5",
-    "CLAUDE_CODE_SUBAGENT_MODEL": "claude-haiku-4-5-20251001",
+    "CLAUDE_CODE_SUBAGENT_MODEL": "haiku",
     "CLAUDE_CODE_AUTOCOMPACT_PCT_OVERRIDE": "50"
   },
   "includeGitInstructions": false,
